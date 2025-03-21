@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📊 GPA & CGPA Calculator</title>
+    <link rel="stylesheet" href="cgpa.css">
+    <style>
+/* Global Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: linear-gradient(to right, #dff6ff, #f0f4f8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    background: #fff;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+h1 {
+    color: #0056b3;
+    font-size: 2.2rem;
+    margin-bottom: 25px;
+    animation: slideDown 0.8s ease-in;
+}
+
+h2 {
+    color: #004a99;
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+}
+
+/* Calculator Box */
+.calculator-box {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 25px;
+    animation: fadeInUp 1s ease-in-out;
+}
+
+.course, .semester {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+.course input, .semester input, select {
+    padding: 12px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    flex: 1 1 45%; /* Flex-grow, flex-shrink, flex-basis */
+    min-width: 150px; /* Minimum width for inputs */
+    max-width: 100%; /* Prevent overflow */
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.course input:focus, .semester input:focus, select:focus {
+    border-color: #0056b3;
+    box-shadow: 0px 0px 8px rgba(0, 86, 179, 0.3);
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 15px;
+    flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+}
+
+button {
+    background: #0056b3;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    font-size: 1rem;
+    font-weight: 500;
+    flex: 1 1 45%; /* Flex-grow, flex-shrink, flex-basis */
+    min-width: 150px; /* Minimum width for buttons */
+}
+
+button:hover {
+    background: #003d82;
+    transform: scale(1.05);
+}
+
+.result {
+    font-size: 1.4rem;
+    margin-top: 20px;
+    color: #333;
+    font-weight: bold;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+    .course, .semester {
+        flex-direction: column;
+    }
+
+    .course input, .semester input, select {
+        width: 100%; /* Full width on small screens */
+        flex: 1 1 100%; /* Allow full width */
+    }
+
+    button {
+        width: 100%; /* Full width on small screens */
+        flex: 1 1 100%; /* Allow full width */
+    }
+}
+        </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="fade-in">📊 GPA & CGPA Calculator</h1>
+
+        <!-- GPA Calculator -->
+        <div class="calculator-box fade-in">
+            <h2>🎓 GPA Calculator</h2>
+            <div id="gpa-inputs">
+                <div class="course">
+                    <input type="text" class="course-name" placeholder="Course Name">
+                    <input type="tel" class="credits" placeholder="Credits" min="1">
+                    <select class="grade">
+                        <option value="10">O (Outstanding)</option>
+                        <option value="9">A+ (Excellent)</option>
+                        <option value="8">A (Very Good)</option>
+                        <option value="7">B+ (Good)</option>
+                        <option value="6">B (Average)</option>
+                        <option value="5">C (Pass)</option>
+                        <option value="0">F (Fail)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="button-group">
+                <button onclick="addCourse()">➕ Add Course</button>
+                <button onclick="calculateGPA()">✅ Calculate GPA</button>
+            </div>
+            <p class="result" id="gpa-result">Your GPA: -</p>
+        </div>
+
+        <!-- CGPA Calculator -->
+        <div class="calculator-box fade-in">
+            <h2>📚 CGPA Calculator</h2>
+            <div id="cgpa-inputs">
+                <div class="semester">
+                    <input type="tel" class="sem-gpa" placeholder="GPA" min="0" max="10">
+                    <input type="tel" class="sem-credits" placeholder="Total Credits" min="1">
+                </div>
+            </div>
+            <div class="button-group">
+                <button onclick="addSemester()">➕ Add Semester</button>
+                <button onclick="calculateCGPA()">✅ Calculate CGPA</button>
+            </div>
+            <p class="result" id="cgpa-result">Your CGPA: -</p>
+        </div>
+    </div>
+
+    <!-- Internal JavaScript -->
+    <script>
+        // Add Course Input for GPA Calculator
+        function addCourse() {
+            const gpaInputs = document.getElementById('gpa-inputs');
+            const newCourse = document.createElement('div');
+            newCourse.classList.add('course');
+            newCourse.innerHTML = `
+                <input type="text" class="course-name" placeholder="Course Name">
+                <input type="number" class="credits" placeholder="Credits" min="1">
+                <select class="grade">
+                    <option value="10">O (Outstanding)</option>
+                    <option value="9">A+ (Excellent)</option>
+                    <option value="8">A (Very Good)</option>
+                    <option value="7">B+ (Good)</option>
+                    <option value="6">B (Average)</option>
+                    <option value="5">C (Pass)</option>
+                    <option value="0">F (Fail)</option>
+                </select>
+            `;
+            gpaInputs.appendChild(newCourse);
+        }
+
+        // Calculate GPA
+        function calculateGPA() {
+            const courses = document.querySelectorAll('.course');
+            let totalCredits = 0;
+            let totalGradePoints = 0;
+
+            courses.forEach(course => {
+                const credits = parseFloat(course.querySelector('.credits').value);
+                const grade = parseFloat(course.querySelector('.grade').value);
+
+                if (!isNaN(credits) && !isNaN(grade)) {
+                    totalCredits += credits;
+                    totalGradePoints += credits * grade;
+                }
+            });
+
+            const gpa = (totalGradePoints / totalCredits).toFixed(2);
+            document.getElementById('gpa-result').textContent = `Your GPA: ${isNaN(gpa) ? '-' : gpa}`;
+        }
+
+        // Add Semester Input for CGPA Calculator
+        function addSemester() {
+            const cgpaInputs = document.getElementById('cgpa-inputs');
+            const newSemester = document.createElement('div');
+            newSemester.classList.add('semester');
+            newSemester.innerHTML = `
+                <input type="number" class="sem-gpa" placeholder="GPA" min="0" max="10">
+                <input type="number" class="sem-credits" placeholder="Total Credits" min="1">
+            `;
+            cgpaInputs.appendChild(newSemester);
+        }
+
+        // Calculate CGPA
+        function calculateCGPA() {
+            const semesters = document.querySelectorAll('.semester');
+            let totalCredits = 0;
+            let totalGradePoints = 0;
+
+            semesters.forEach(semester => {
+                const gpa = parseFloat(semester.querySelector('.sem-gpa').value);
+                const credits = parseFloat(semester.querySelector('.sem-credits').value);
+
+                if (!isNaN(gpa) && !isNaN(credits)) {
+                    totalCredits += credits;
+                    totalGradePoints += gpa * credits;
+                }
+            });
+
+            const cgpa = (totalGradePoints / totalCredits).toFixed(2);
+            document.getElementById('cgpa-result').textContent = `Your CGPA: ${isNaN(cgpa) ? '-' : cgpa}`;
+        }
+    </script>
+</body>
+</html>
